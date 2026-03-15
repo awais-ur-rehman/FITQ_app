@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/router/app_router.dart';
 import '../bloc/closet_cubit.dart';
 import '../bloc/closet_state.dart';
 import '../widgets/outfit_grid_item.dart';
@@ -230,11 +231,19 @@ class _EmptyView extends StatelessWidget {
             Text(
               isFavs
                   ? 'Bookmark your favorites from the score screen'
-                  : 'Tap the scan button to rate your first outfit',
+                  : 'Snap a photo to see how your outfit rates.',
               style: AppTextStyles.bodySmall
                   .copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
+            if (!isFavs) ...[
+              const SizedBox(height: 28),
+              ElevatedButton.icon(
+                onPressed: () => context.push(RouteNames.scanCamera),
+                icon: const Icon(Icons.camera_alt_outlined, size: 16),
+                label: const Text('Take your first scan'),
+              ),
+            ],
           ],
         ),
       ),
