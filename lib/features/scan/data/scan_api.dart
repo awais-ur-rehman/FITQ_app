@@ -27,10 +27,13 @@ class ScanApi {
   Future<Map<String, dynamic>> getScans({
     int page = 1,
     int limit = 20,
+    bool favoritesOnly = false,
   }) async {
+    final params = <String, dynamic>{'page': page, 'limit': limit};
+    if (favoritesOnly) params['favorites'] = 'true';
     final res = await _client.get<Map<String, dynamic>>(
       ApiEndpoints.scans,
-      queryParameters: {'page': page, 'limit': limit},
+      queryParameters: params,
     );
     return res.data!;
   }

@@ -1,23 +1,29 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/bloc/auth_bloc.dart';
 import '../../features/auth/bloc/auth_state.dart';
-import 'dart:io';
-
 import '../../features/auth/screens/forgot_password_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/otp_screen.dart';
 import '../../features/auth/screens/signup_screen.dart';
+import '../../features/closet/screens/closet_screen.dart';
+import '../../features/closet/screens/scan_detail_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/profile/screens/edit_profile_screen.dart';
+import '../../features/profile/screens/profile_screen.dart';
+import '../../features/profile/screens/settings_screen.dart';
+import '../../features/profile/screens/stats_screen.dart';
 import '../../features/scan/screens/camera_screen.dart';
 import '../../features/scan/screens/confirm_screen.dart';
 import '../../features/scan/screens/score_screen.dart';
 import '../../features/splash/splash_screen.dart';
-import '../../core/storage/prefs_service.dart';
+import '../../models/scan_model.dart';
+import '../storage/prefs_service.dart';
 
 abstract class RouteNames {
   static const String splash = '/';
@@ -27,19 +33,17 @@ abstract class RouteNames {
   static const String otp = '/otp';
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
-  static const String scanCamera = '/scan/camera';
-  static const String scanConfirm = '/scan/confirm';
-  static const String scanScore = '/scan/score';
   static const String closet = '/closet';
   static const String scanDetail = '/closet/:id';
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
   static const String stats = '/profile/stats';
   static const String settings = '/profile/settings';
+  static const String scanCamera = '/scan/camera';
+  static const String scanConfirm = '/scan/confirm';
+  static const String scanScore = '/scan/score';
 }
 
-/// Wraps a BLoC stream so GoRouter can listen for state changes via
-/// [refreshListenable] and re-evaluate redirect logic.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
@@ -76,7 +80,6 @@ class AppRouter {
         final status = authBloc.state.status;
         final loc = state.matchedLocation;
 
-        // Still initialising — let splash handle navigation via BlocListener
         if (status == AuthStatus.initial || status == AuthStatus.loading) {
           return null;
         }
@@ -131,10 +134,8 @@ class AppRouter {
           path: RouteNames.forgotPassword,
           builder: (_, _) => const ForgotPasswordScreen(),
         ),
-        GoRoute(
-          path: RouteNames.home,
-          builder: (_, _) => const HomeScreen(),
-        ),
+
+        // Scan flow — full-screen, outside shell
         GoRoute(
           path: RouteNames.scanCamera,
           builder: (_, _) => const CameraScreen(),
@@ -149,6 +150,63 @@ class AppRouter {
         GoRoute(
           path: RouteNames.scanScore,
           builder: (_, _) => const ScoreScreen(),
+        ),
+
+        // Home shell with bottom nav
+        StatefulShellRoute.indexedStack(
+          builder: (_, _, shell) => HomeShell(navigationShell: shell),
+          branches: [
+            // Branch 0 — Closet
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: RouteNames.closet,
+                  builder: (_, _) => const ClosetScreen(),
+                  routes: [
+                    GoRoute(
+                      path: ':id',
+                      builder: (_, state) => ScanDetailScreen(
+                        scanId: state.pathParameters['id']!,
+                        initialScan: state.extra as ScanModel?,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            // Branch 1 — Scan / Home
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: RouteNames.home,
+                  builder: (_, _) => const ScanTabScreen(),
+                ),
+              ],
+            ),
+
+            // Branch 2 — Profile
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: RouteNames.profile,
+                  builder: (_, _) => const ProfileScreen(),
+                ),
+                GoRoute(
+                  path: RouteNames.editProfile,
+                  builder: (_, _) => const EditProfileScreen(),
+                ),
+                GoRoute(
+                  path: RouteNames.stats,
+                  builder: (_, _) => const StatsScreen(),
+                ),
+                GoRoute(
+                  path: RouteNames.settings,
+                  builder: (_, _) => const SettingsScreen(),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
