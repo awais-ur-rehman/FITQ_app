@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
@@ -35,7 +36,9 @@ class _ScoreRingState extends State<ScoreRing>
     _countAnim = Tween<double>(begin: 0, end: widget.score).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
     );
-    _controller.forward();
+    _controller.forward().then((_) {
+      HapticFeedback.lightImpact();
+    });
   }
 
   @override

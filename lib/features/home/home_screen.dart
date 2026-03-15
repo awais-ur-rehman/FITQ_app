@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -171,7 +172,10 @@ class ScanTabScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 52),
                 GestureDetector(
-                  onTap: () => context.push(RouteNames.scanCamera),
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    context.push(RouteNames.scanCamera);
+                  },
                   child: Container(
                     width: 120,
                     height: 120,

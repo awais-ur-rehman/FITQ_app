@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -8,6 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/utils/image_utils.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../bloc/scan_bloc.dart';
 import '../bloc/scan_event.dart';
@@ -65,9 +67,12 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     }
   }
 
-  void _analyze(BuildContext ctx) {
+  Future<void> _analyze(BuildContext ctx) async {
     setState(() => _errorMessage = null);
-    ctx.read<ScanBloc>().add(ScanSubmitted(_currentFile));
+    HapticFeedback.mediumImpact();
+    final compressed = await ImageUtils.compress(_currentFile);
+    if (!ctx.mounted) return;
+    ctx.read<ScanBloc>().add(ScanSubmitted(compressed));
   }
 
   void _showScanLimitSheet(BuildContext context) {

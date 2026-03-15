@@ -8,6 +8,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/router/app_router.dart';
 import '../../auth/bloc/auth_bloc.dart';
+import '../../../shared/widgets/shimmer_box.dart';
 import '../bloc/profile_cubit.dart';
 import '../bloc/profile_state.dart';
 
@@ -133,16 +134,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: 'Highest Score',
                           value: state.stats!.highestScore.toStringAsFixed(1),
                         ),
-                      ] else if (state.status == ProfileStatus.loading)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(24),
-                            child: CircularProgressIndicator(
-                              color: AppColors.neonMint,
-                              strokeWidth: 2,
-                            ),
-                          ),
+                      ] else if (state.status == ProfileStatus.loading) ...[
+                        ShimmerBox(
+                          width: double.infinity,
+                          height: 52,
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        const SizedBox(height: 8),
+                        ShimmerBox(
+                          width: double.infinity,
+                          height: 52,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ],
 
                       const SizedBox(height: 40),
                     ],
