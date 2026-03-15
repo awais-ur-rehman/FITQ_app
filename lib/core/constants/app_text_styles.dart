@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
 
+// Space Grotesk font files live in assets/fonts/ (user provides TTF).
+// Falls back to system sans-serif if font files are not yet present.
+const String _kHeader = 'SpaceGrotesk';
+
 class AppTextStyles {
   AppTextStyles._();
 
+  static const TextStyle displayLarge = TextStyle(
+    fontFamily: _kHeader,
+    fontSize: 48,
+    fontWeight: FontWeight.w800,
+    letterSpacing: -1.5,
+    height: 1.1,
+  );
+
   static const TextStyle headlineLarge = TextStyle(
+    fontFamily: _kHeader,
     fontSize: 32,
     fontWeight: FontWeight.w800,
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
     height: 1.2,
   );
 
   static const TextStyle headlineMedium = TextStyle(
-    fontSize: 24,
+    fontFamily: _kHeader,
+    fontSize: 26,
     fontWeight: FontWeight.w700,
-    letterSpacing: -0.3,
-    height: 1.3,
+    letterSpacing: -0.4,
+    height: 1.25,
   );
 
   static const TextStyle headlineSmall = TextStyle(
+    fontFamily: _kHeader,
     fontSize: 20,
     fontWeight: FontWeight.w600,
+    letterSpacing: -0.2,
     height: 1.3,
   );
 
   static const TextStyle titleLarge = TextStyle(
+    fontFamily: _kHeader,
     fontSize: 18,
     fontWeight: FontWeight.w600,
     height: 1.4,
@@ -44,13 +61,13 @@ class AppTextStyles {
   static const TextStyle bodyLarge = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    height: 1.5,
+    height: 1.55,
   );
 
   static const TextStyle bodyMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    height: 1.5,
+    height: 1.55,
   );
 
   static const TextStyle bodySmall = TextStyle(
@@ -60,9 +77,10 @@ class AppTextStyles {
   );
 
   static const TextStyle labelLarge = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.1,
+    fontFamily: _kHeader,
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.3,
   );
 
   static const TextStyle labelMedium = TextStyle(
@@ -77,8 +95,9 @@ class AppTextStyles {
     letterSpacing: 0.5,
   );
 
-  // Score-specific — the big hero number
+  // Score hero number
   static const TextStyle scoreHero = TextStyle(
+    fontFamily: _kHeader,
     fontSize: 80,
     fontWeight: FontWeight.w900,
     letterSpacing: -4,
