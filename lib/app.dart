@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
 import 'core/network/api_client.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/prefs_service.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/bloc/auth_bloc.dart';
+import 'features/auth/data/auth_api.dart';
+import 'features/auth/data/auth_repository.dart';
 
-class FITQApp extends StatelessWidget {
+class FITQApp extends StatefulWidget {
   final PrefsService prefsService;
   final ApiClient apiClient;
 
@@ -16,27 +21,51 @@ class FITQApp extends StatelessWidget {
   });
 
   @override
+  State<FITQApp> createState() => _FITQAppState();
+}
+
+class _FITQAppState extends State<FITQApp> {
+  late final AuthRepository _authRepository;
+  late final AuthBloc _authBloc;
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _authRepository = AuthRepository(
+      api: AuthApi(client: widget.apiClient),
+      prefs: widget.prefsService,
+    );
+    _authBloc = AuthBloc(authRepository: _authRepository);
+    _router = AppRouter.createRouter(
+      authBloc: _authBloc,
+      prefs: widget.prefsService,
+    );
+  }
+
+  @override
+  void dispose() {
+    _authBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-      providers: const [
-        // Repositories added progressively as features are built:
-        // RepositoryProvider(create: (_) => AuthRepository(...)),
-        // RepositoryProvider(create: (_) => ScanRepository(...)),
-        // RepositoryProvider(create: (_) => ProfileRepository(...)),
+      providers: [
+        RepositoryProvider.value(value: widget.prefsService),
+        RepositoryProvider.value(value: _authRepository),
       ],
       child: MultiBlocProvider(
-        providers: const [
-          // BLoCs added progressively as features are built:
-          // BlocProvider(create: (ctx) => AuthBloc(
-          //   authRepository: ctx.read<AuthRepository>(),
-          // )),
+        providers: [
+          BlocProvider.value(value: _authBloc),
         ],
         child: MaterialApp.router(
           title: 'FITQ',
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: ThemeMode.system,
-          routerConfig: AppRouter.router,
+          routerConfig: _router,
           debugShowCheckedModeBanner: false,
         ),
       ),
