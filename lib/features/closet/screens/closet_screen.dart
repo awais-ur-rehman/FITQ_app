@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/router/app_router.dart';
+import '../../../shared/widgets/shimmer_box.dart';
 import '../bloc/closet_cubit.dart';
 import '../bloc/closet_state.dart';
 import '../widgets/outfit_grid_item.dart';
@@ -73,12 +75,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
       body: BlocBuilder<ClosetCubit, ClosetState>(
         builder: (context, state) {
           if (state.status == ClosetStatus.loading && state.scans.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.neonMint,
-                strokeWidth: 2,
-              ),
-            );
+            return _ShimmerGrid();
           }
 
           if (state.status == ClosetStatus.failure && state.scans.isEmpty) {
@@ -128,6 +125,28 @@ class _ClosetScreenState extends State<ClosetScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _ShimmerGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.72,
+      ),
+      itemCount: 6,
+      itemBuilder: (_, _) => ShimmerBox(
+        width: double.infinity,
+        height: double.infinity,
+        borderRadius: BorderRadius.circular(12),
       ),
     );
   }
@@ -230,11 +249,19 @@ class _EmptyView extends StatelessWidget {
             Text(
               isFavs
                   ? 'Bookmark your favorites from the score screen'
-                  : 'Tap the scan button to rate your first outfit',
+                  : 'Snap a photo to see how your outfit rates.',
               style: AppTextStyles.bodySmall
                   .copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
+            if (!isFavs) ...[
+              const SizedBox(height: 28),
+              ElevatedButton.icon(
+                onPressed: () => context.push(RouteNames.scanCamera),
+                icon: const Icon(Icons.camera_alt_outlined, size: 16),
+                label: const Text('Take your first scan'),
+              ),
+            ],
           ],
         ),
       ),

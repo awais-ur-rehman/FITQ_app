@@ -1,12 +1,18 @@
 import 'package:dio/dio.dart';
 import '../constants/api_endpoints.dart';
 import '../storage/prefs_service.dart';
+import '../utils/connectivity_service.dart';
 
 class ApiClient {
   late final Dio _dio;
   final PrefsService _prefs;
+  final ConnectivityService? _connectivity;
 
-  ApiClient({required PrefsService prefs}) : _prefs = prefs {
+  ApiClient({
+    required PrefsService prefs,
+    ConnectivityService? connectivity,
+  })  : _prefs = prefs,
+        _connectivity = connectivity {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiEndpoints.baseUrl,
@@ -25,7 +31,14 @@ class ApiClient {
           }
           handler.next(options);
         },
+        onResponse: (response, handler) {
+          _connectivity?.reportOnline();
+          handler.next(response);
+        },
         onError: (error, handler) async {
+          if (_isConnectionError(error)) {
+            _connectivity?.reportOffline();
+          }
           if (error.response?.statusCode == 401) {
             final refreshed = await _tryRefreshToken();
             if (refreshed) {
@@ -34,6 +47,7 @@ class ApiClient {
                     'Bearer ${_prefs.getAccessToken()}';
               try {
                 final retryResponse = await _dio.fetch<dynamic>(retryOptions);
+                _connectivity?.reportOnline();
                 return handler.resolve(retryResponse);
               } on DioException catch (e) {
                 return handler.reject(e);
@@ -45,6 +59,12 @@ class ApiClient {
       ),
     );
   }
+
+  static bool _isConnectionError(DioException e) =>
+      e.type == DioExceptionType.connectionError ||
+      e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.sendTimeout ||
+      e.type == DioExceptionType.receiveTimeout;
 
   Future<bool> _tryRefreshToken() async {
     try {

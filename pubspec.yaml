@@ -32,6 +32,7 @@ dependencies:
   camera: ^0.11.1
   image_picker: ^1.1.2
   image_cropper: ^9.1.0
+  flutter_image_compress: ^2.3.0
 
   # Share / export
   share_plus: ^10.1.4
@@ -56,6 +57,13 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_native_splash: ^2.4.3
+
+flutter_native_splash:
+  color: "#080808"
+  color_dark: "#080808"
+  android_12:
+    color: "#080808"
+    color_dark: "#080808"
 
 flutter:
   uses-material-design: true

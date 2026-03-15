@@ -6,6 +6,7 @@ import 'core/network/api_client.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/prefs_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/connectivity_service.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/data/auth_api.dart';
 import 'features/auth/data/auth_repository.dart';
@@ -21,11 +22,13 @@ import 'features/scan/data/scan_repository.dart';
 class FITQApp extends StatefulWidget {
   final PrefsService prefsService;
   final ApiClient apiClient;
+  final ConnectivityService connectivity;
 
   const FITQApp({
     super.key,
     required this.prefsService,
     required this.apiClient,
+    required this.connectivity,
   });
 
   @override
@@ -86,6 +89,7 @@ class _FITQAppState extends State<FITQApp> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: widget.prefsService),
+        RepositoryProvider.value(value: widget.connectivity),
         RepositoryProvider.value(value: _authRepository),
         RepositoryProvider.value(value: _scanRepository),
         RepositoryProvider.value(value: _closetRepository),

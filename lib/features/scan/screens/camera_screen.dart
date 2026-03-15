@@ -345,6 +345,14 @@ class _PermissionView extends StatelessWidget {
               onPressed: onRetry,
               child: const Text('Allow Camera'),
             ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => openAppSettings(),
+              child: Text(
+                'Open Settings',
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+            ),
           ],
         ),
       ),

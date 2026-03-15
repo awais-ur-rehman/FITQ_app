@@ -8,6 +8,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/router/app_router.dart';
 import '../../auth/bloc/auth_bloc.dart';
+import '../../../shared/widgets/shimmer_box.dart';
 import '../bloc/profile_cubit.dart';
 import '../bloc/profile_state.dart';
 
@@ -111,12 +112,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Detailed stats link
                       _SectionHeader(
                         label: 'STYLE INSIGHTS',
-                        actionLabel: 'See all stats',
+                        actionLabel: user.stats.totalScans > 0
+                            ? 'See all stats'
+                            : null,
                         onAction: () => context.push(RouteNames.stats),
                       ),
                       const SizedBox(height: 12),
 
-                      if (state.stats != null) ...[
+                      if (user.stats.totalScans == 0)
+                        _NoStatsView()
+                      else if (state.stats != null) ...[
                         if (state.stats!.favoriteStyle != null)
                           _InsightTile(
                             icon: Icons.style_outlined,
@@ -129,16 +134,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: 'Highest Score',
                           value: state.stats!.highestScore.toStringAsFixed(1),
                         ),
-                      ] else if (state.status == ProfileStatus.loading)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(24),
-                            child: CircularProgressIndicator(
-                              color: AppColors.neonMint,
-                              strokeWidth: 2,
-                            ),
-                          ),
+                      ] else if (state.status == ProfileStatus.loading) ...[
+                        ShimmerBox(
+                          width: double.infinity,
+                          height: 52,
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        const SizedBox(height: 8),
+                        ShimmerBox(
+                          width: double.infinity,
+                          height: 52,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ],
 
                       const SizedBox(height: 40),
                     ],
@@ -440,6 +448,43 @@ class _SectionHeader extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _NoStatsView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.bar_chart_outlined,
+            size: 36,
+            color: AppColors.textMuted,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'No stats yet',
+            style: AppTextStyles.titleSmall
+                .copyWith(color: AppColors.textPrimary),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Scan your first outfit to see insights here.',
+            style: AppTextStyles.bodySmall
+                .copyWith(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
