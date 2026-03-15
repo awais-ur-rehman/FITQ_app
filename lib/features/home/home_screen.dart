@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/router/app_router.dart';
+import '../../shared/widgets/offline_banner.dart';
 import '../auth/bloc/auth_bloc.dart';
 import '../auth/bloc/auth_state.dart';
 
@@ -20,7 +21,7 @@ class HomeShell extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: navigationShell,
+      body: OfflineBanner(child: navigationShell),
       bottomNavigationBar: Container(
         height: 64 + bottomPad,
         padding: EdgeInsets.only(bottom: bottomPad),
