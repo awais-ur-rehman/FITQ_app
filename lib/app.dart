@@ -9,6 +9,9 @@ import 'core/theme/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/data/auth_api.dart';
 import 'features/auth/data/auth_repository.dart';
+import 'features/scan/bloc/scan_bloc.dart';
+import 'features/scan/data/scan_api.dart';
+import 'features/scan/data/scan_repository.dart';
 
 class FITQApp extends StatefulWidget {
   final PrefsService prefsService;
@@ -26,7 +29,9 @@ class FITQApp extends StatefulWidget {
 
 class _FITQAppState extends State<FITQApp> {
   late final AuthRepository _authRepository;
+  late final ScanRepository _scanRepository;
   late final AuthBloc _authBloc;
+  late final ScanBloc _scanBloc;
   late final GoRouter _router;
 
   @override
@@ -36,7 +41,11 @@ class _FITQAppState extends State<FITQApp> {
       api: AuthApi(client: widget.apiClient),
       prefs: widget.prefsService,
     );
+    _scanRepository = ScanRepository(
+      api: ScanApi(client: widget.apiClient),
+    );
     _authBloc = AuthBloc(authRepository: _authRepository);
+    _scanBloc = ScanBloc(scanRepository: _scanRepository);
     _router = AppRouter.createRouter(
       authBloc: _authBloc,
       prefs: widget.prefsService,
@@ -46,6 +55,7 @@ class _FITQAppState extends State<FITQApp> {
   @override
   void dispose() {
     _authBloc.close();
+    _scanBloc.close();
     super.dispose();
   }
 
@@ -55,10 +65,12 @@ class _FITQAppState extends State<FITQApp> {
       providers: [
         RepositoryProvider.value(value: widget.prefsService),
         RepositoryProvider.value(value: _authRepository),
+        RepositoryProvider.value(value: _scanRepository),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider.value(value: _authBloc),
+          BlocProvider.value(value: _scanBloc),
         ],
         child: MaterialApp.router(
           title: 'FITQ',
