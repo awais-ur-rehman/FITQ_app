@@ -5,12 +5,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/bloc/auth_bloc.dart';
 import '../../features/auth/bloc/auth_state.dart';
+import 'dart:io';
+
 import '../../features/auth/screens/forgot_password_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/otp_screen.dart';
 import '../../features/auth/screens/signup_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/scan/screens/camera_screen.dart';
+import '../../features/scan/screens/confirm_screen.dart';
+import '../../features/scan/screens/score_screen.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../core/storage/prefs_service.dart';
 
@@ -129,6 +134,21 @@ class AppRouter {
         GoRoute(
           path: RouteNames.home,
           builder: (_, _) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.scanCamera,
+          builder: (_, _) => const CameraScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.scanConfirm,
+          builder: (_, state) {
+            final file = state.extra as File;
+            return ConfirmScreen(imageFile: file);
+          },
+        ),
+        GoRoute(
+          path: RouteNames.scanScore,
+          builder: (_, _) => const ScoreScreen(),
         ),
       ],
     );
