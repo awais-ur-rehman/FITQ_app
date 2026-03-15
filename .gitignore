@@ -43,3 +43,23 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Sensitive / environment
+*.env
+google-services.json
+GoogleService-Info.plist
+android/key.properties
+*.jks
+*.keystore
+
+# Flutter native splash generated assets
+android/app/src/main/res/drawable/launch_background.xml
+android/app/src/main/res/drawable-v21/launch_background.xml
+ios/Runner/Assets.xcassets/LaunchImage.imageset/
+
+# macOS
+macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Generated files
+lib/**/*.g.dart
+lib/**/*.freezed.dart
