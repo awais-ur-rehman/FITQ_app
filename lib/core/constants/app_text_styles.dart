@@ -10,7 +10,7 @@ class AppTextStyles {
   static const TextStyle displayLarge = TextStyle(
     fontFamily: _kHeader,
     fontSize: 48,
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w700,
     letterSpacing: -1.5,
     height: 1.1,
   );
@@ -18,7 +18,7 @@ class AppTextStyles {
   static const TextStyle headlineLarge = TextStyle(
     fontFamily: _kHeader,
     fontSize: 32,
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w700,
     letterSpacing: -0.8,
     height: 1.2,
   );
@@ -99,7 +99,7 @@ class AppTextStyles {
   static const TextStyle scoreHero = TextStyle(
     fontFamily: _kHeader,
     fontSize: 80,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w700,
     letterSpacing: -4,
     height: 1,
   );

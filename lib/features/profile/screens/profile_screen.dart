@@ -244,7 +244,7 @@ class _ProfileHeader extends StatelessWidget {
                           'PRO',
                           style: AppTextStyles.labelSmall.copyWith(
                             color: AppColors.deepCarbon,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
