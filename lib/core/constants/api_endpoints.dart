@@ -1,8 +1,8 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Switch to http://10.0.2.2:5000/api/v1 for Android emulator local dev
-  static const String baseUrl = 'https://fitq-api.onrender.com/api/v1';
+  // Switch to http://10.0.2.2:3000/api/v1 for Android emulator local dev
+  static const String baseUrl = 'http://192.168.100.60:3000/api/v1';
 
   // Auth
   static const String signup = '/auth/signup';
