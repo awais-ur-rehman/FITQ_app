@@ -28,11 +28,16 @@ class OutfitGridItem extends StatelessWidget {
               imageUrl: scan.thumbnailUrl,
               fit: BoxFit.cover,
               placeholder: (_, _) => Container(color: AppColors.surface),
-              errorWidget: (_, _, _) => Container(
-                color: AppColors.surface,
-                child: const Icon(
-                  Icons.broken_image_outlined,
-                  color: AppColors.textMuted,
+              errorWidget: (_, _, _) => CachedNetworkImage(
+                imageUrl: scan.imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (_, _) => Container(color: AppColors.surface),
+                errorWidget: (_, _, _) => Container(
+                  color: AppColors.surface,
+                  child: const Icon(
+                    Icons.broken_image_outlined,
+                    color: AppColors.textMuted,
+                  ),
                 ),
               ),
             ),
