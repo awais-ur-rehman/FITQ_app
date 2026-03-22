@@ -292,18 +292,20 @@ class _BottomBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _ActionBtn(
-            icon: Icons.ios_share_rounded,
-            label: 'Share',
-            onTap: () {
-              final username =
-                  context.read<AuthBloc>().state.user?.username ?? 'fitq_user';
-              ShareCardGenerator.shareScore(
-                context: context,
-                scan: scan,
-                username: username,
-              );
-            },
+          Expanded(
+            child: _ActionBtn(
+              icon: Icons.ios_share_rounded,
+              label: 'Share',
+              onTap: () {
+                final username =
+                    context.read<AuthBloc>().state.user?.username ?? 'fitq_user';
+                ShareCardGenerator.shareScore(
+                  context: context,
+                  scan: scan,
+                  username: username,
+                );
+              },
+            ),
           ),
           const SizedBox(width: 10),
           BlocBuilder<ClosetCubit, ClosetState>(
@@ -312,12 +314,14 @@ class _BottomBar extends StatelessWidget {
               final isFav =
                   state.scans.where((s) => s.id == scan.id).firstOrNull?.isFavorite ??
                       scan.isFavorite;
-              return _ActionBtn(
-                icon: isFav ? Icons.bookmark : Icons.bookmark_border,
-                label: isFav ? 'Saved' : 'Save',
-                accent: isFav,
-                onTap: () =>
-                    context.read<ClosetCubit>().toggleFavorite(scan.id),
+              return Expanded(
+                child: _ActionBtn(
+                  icon: isFav ? Icons.bookmark : Icons.bookmark_border,
+                  label: isFav ? 'Saved' : 'Save',
+                  accent: isFav,
+                  onTap: () =>
+                      context.read<ClosetCubit>().toggleFavorite(scan.id),
+                ),
               );
             },
           ),
@@ -403,7 +407,7 @@ class _ActionBtn extends StatelessWidget {
           border: Border.all(color: border),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 16, color: fg),
             const SizedBox(width: 6),

@@ -39,7 +39,21 @@ class ApiClient {
           if (_isConnectionError(error)) {
             _connectivity?.reportOffline();
           }
-          if (error.response?.statusCode == 401) {
+          // Only attempt token refresh for protected endpoints.
+          // Auth endpoints (login, signup, etc.) return 401 for wrong credentials
+          // — retrying them with a refreshed token makes no sense.
+          const authPaths = {
+            '/auth/login',
+            '/auth/signup',
+            '/auth/verify-otp',
+            '/auth/resend-otp',
+            '/auth/forgot-password',
+            '/auth/reset-password',
+            '/auth/refresh',
+          };
+          final path = error.requestOptions.path;
+          if (error.response?.statusCode == 401 &&
+              !authPaths.contains(path)) {
             final refreshed = await _tryRefreshToken();
             if (refreshed) {
               final retryOptions = error.requestOptions

@@ -125,8 +125,8 @@ class AuthRepository {
   Future<UserModel> getMe() async {
     try {
       final json = await _api.getMe();
-      final user =
-          UserModel.fromJson(json['data'] as Map<String, dynamic>);
+      final data = json['data'] as Map<String, dynamic>;
+      final user = UserModel.fromJson(data['user'] as Map<String, dynamic>);
       await _prefs.saveUser(jsonEncode(user.toJson()));
       return user;
     } on DioException catch (e) {

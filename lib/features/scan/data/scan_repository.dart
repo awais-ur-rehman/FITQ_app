@@ -30,9 +30,12 @@ class ScanRepository {
   Future<ScanModel> uploadScan(File imageFile) async {
     try {
       final json = await _api.uploadScan(imageFile);
-      return ScanModel.fromJson(json['data'] as Map<String, dynamic>);
+      final data = json['data'] as Map<String, dynamic>;
+      return ScanModel.fromJson(data['scan'] as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ScanException(_parseError(e), statusCode: e.response?.statusCode);
+    } catch (e) {
+      throw ScanException(e.toString());
     }
   }
 

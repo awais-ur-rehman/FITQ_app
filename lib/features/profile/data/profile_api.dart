@@ -21,7 +21,7 @@ class ProfileApi {
 
   Future<Map<String, dynamic>> uploadAvatar(File imageFile) async {
     final formData = FormData.fromMap({
-      'avatar': await MultipartFile.fromFile(
+      'image': await MultipartFile.fromFile(
         imageFile.path,
         filename: 'avatar.jpg',
       ),
@@ -37,7 +37,7 @@ class ProfileApi {
     required String currentPassword,
     required String newPassword,
   }) async {
-    final res = await _client.post<Map<String, dynamic>>(
+    final res = await _client.patch<Map<String, dynamic>>(
       ApiEndpoints.profileChangePassword,
       data: {
         'currentPassword': currentPassword,

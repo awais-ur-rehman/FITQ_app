@@ -12,19 +12,28 @@ import '../../../shared/widgets/custom_text_field.dart';
 import '../bloc/profile_cubit.dart';
 import '../bloc/profile_state.dart';
 
-const _kGenders = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
+// Values must match backend enums exactly
+const _kGenders = ['male', 'female', 'other', 'prefer_not_to_say'];
 const _kStyles = [
-  'Streetwear',
-  'Casual',
-  'Formal',
-  'Business Casual',
-  'Athleisure',
-  'Bohemian',
-  'Minimalist',
-  'Vintage',
-  'Preppy',
-  'Techwear',
+  'streetwear',
+  'casual',
+  'formal',
+  'minimalist',
+  'bohemian',
+  'athletic',
+  'vintage',
 ];
+
+String _fmtGender(String v) => switch (v) {
+      'male' => 'Male',
+      'female' => 'Female',
+      'other' => 'Other',
+      'prefer_not_to_say' => 'Prefer not to say',
+      _ => v,
+    };
+
+String _fmtStyle(String v) =>
+    v[0].toUpperCase() + v.substring(1);
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -200,6 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       label: 'Gender',
                       value: _gender,
                       items: _kGenders,
+                      labelBuilder: _fmtGender,
                       onChanged: (v) => setState(() => _gender = v),
                     ),
                     const SizedBox(height: 16),
@@ -208,6 +218,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       label: 'Style Preference',
                       value: _stylePreference,
                       items: _kStyles,
+                      labelBuilder: _fmtStyle,
                       onChanged: (v) =>
                           setState(() => _stylePreference = v),
                     ),
@@ -250,12 +261,14 @@ class _DropdownField extends StatelessWidget {
   final String label;
   final String? value;
   final List<String> items;
+  final String Function(String) labelBuilder;
   final ValueChanged<String?> onChanged;
 
   const _DropdownField({
     required this.label,
     required this.value,
     required this.items,
+    required this.labelBuilder,
     required this.onChanged,
   });
 
@@ -304,7 +317,7 @@ class _DropdownField extends StatelessWidget {
           items: items
               .map((s) => DropdownMenuItem(
                     value: s,
-                    child: Text(s),
+                    child: Text(labelBuilder(s)),
                   ))
               .toList(),
           onChanged: onChanged,

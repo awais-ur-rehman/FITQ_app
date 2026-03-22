@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Switch to http://10.0.2.2:3000/api/v1 for Android emulator local dev
+  // Switch to http://10.0.2.2:5000/api/v1 for Android emulator local dev
   static const String baseUrl = 'http://192.168.100.60:3000/api/v1';
 
   // Auth

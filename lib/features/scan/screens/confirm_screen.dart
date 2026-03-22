@@ -62,6 +62,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           _errorMessage = null;
         });
       }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _errorMessage = 'Could not crop image. Please try again.');
+      }
     } finally {
       if (mounted) setState(() => _isCropping = false);
     }

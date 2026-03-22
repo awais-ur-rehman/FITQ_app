@@ -36,7 +36,8 @@ class ProfileRepository {
       if (gender != null) data['gender'] = gender;
       if (stylePreference != null) data['stylePreference'] = stylePreference;
       final json = await _api.updateProfile(data);
-      return UserModel.fromJson(json['data'] as Map<String, dynamic>);
+      final d = json['data'] as Map<String, dynamic>;
+      return UserModel.fromJson(d['user'] as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ProfileException(_parseError(e),
           statusCode: e.response?.statusCode);
@@ -46,7 +47,8 @@ class ProfileRepository {
   Future<UserModel> uploadAvatar(File imageFile) async {
     try {
       final json = await _api.uploadAvatar(imageFile);
-      return UserModel.fromJson(json['data'] as Map<String, dynamic>);
+      final d = json['data'] as Map<String, dynamic>;
+      return UserModel.fromJson(d['user'] as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ProfileException(_parseError(e),
           statusCode: e.response?.statusCode);
